@@ -1,0 +1,4 @@
+require 'rubygems'
+require 'uatu'
+
+Uatu.run ARGV
