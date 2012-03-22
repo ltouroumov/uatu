@@ -1,2 +1,2 @@
 #!/bin/bash
-echo 'test' >> test.log
+echo $@ >> test.log

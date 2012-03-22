@@ -20,8 +20,8 @@ class Uatu
 		@last_update = Time.now
 		FSSM.monitor(@options[:path]) do |mon|
 			mon.update &(trigger_block :update)
-			mon.delete &(trigger_block :delete)
 			mon.create &(trigger_block :create)
+			mon.delete &(trigger_block :delete)
 		end
 	end
 
@@ -34,7 +34,13 @@ private
 	end
 
 	def trigger(base, rel, evt)
-		path = File.realpath(rel, base)
+		begin
+			path = File.realpath(rel, base)
+		rescue
+			# if the file does not exist (in case of a deletion)
+			path = rel
+		end
+
 		return if exclude? path
 		return unless time_elapsed?
 
