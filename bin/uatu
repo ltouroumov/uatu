@@ -1,4 +1,42 @@
+#!/usr/bin/env ruby
 require 'rubygems'
 require 'uatu'
+require 'optparse'
 
-Uatu.run ARGV
+options = {
+	cmd: false,
+	script: false,
+	path: '.',
+	pattern: false,
+	exclude: false,
+	time: false,
+}
+OptionParser.new do |opts|
+	opts.banner= "Usage: uatu "
+
+	opts.on('-c CMD', 'Command to run') do |cmd|
+		options[:cmd] = cmd
+	end
+	opts.on('-s SCRIPT', 'Script to run') do |script|
+		options[:script] = File.realpath(script)
+	end
+	opts.on('-b BASE', 'Path to watch default: "."') do |path|
+		options[:path] = path
+	end
+	opts.on('-p', '--patern PATTERN', 'Only trigger when file matches PATTRN') do |pattern|
+		options[:pattern] = pattern
+	end
+	opts.on('-x', '--exclude PATTERN', 'Exclude some files') do |exclude|
+		options[:exclude] = exclude
+	end
+	opts.on('-w', '--wait TIME', 'Minimum time between triggers') do |time|
+		begin
+			options[:time] = time.to_i
+		rescue
+			puts "Error: '%s' is not a integer" % [time.to_s]
+			exit 255
+		end
+	end
+end.parse!
+
+Uatu.run(options)
