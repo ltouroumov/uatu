@@ -1,6 +1,6 @@
 Gem::Specification.new do |spec|
   spec.name = 'uatu'
-  spec.version = '0.5.1'
+  spec.version = '0.6.0'
   spec.date = '2012-03-21'
 
   spec.author = 'Jeremy David'
@@ -14,7 +14,7 @@ Gem::Specification.new do |spec|
   }
   spec.homepage = 'http://github.com/ltouroumov/uatu'
 
-  spec.add_runtime_dependency 'fssm', '>= 0.2.8.1'
+  spec.add_runtime_dependency 'listen', '~> 0.4.7'
 
   spec.files = ['bin/uatu', 'lib/uatu.rb']
   spec.executables = ['uatu']

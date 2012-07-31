@@ -1,4 +1,4 @@
-require 'fssm'
+require 'listen'
 
 class Uatu
 
@@ -18,45 +18,30 @@ class Uatu
 
 		puts "Watcher started"
 		@last_update = Time.now
-		FSSM.monitor(@options[:path]) do |mon|
-			mon.update &(trigger_block :update)
-			mon.create &(trigger_block :create)
-			mon.delete &(trigger_block :delete)
-		end
+    Listen.to(@options[:path]) do |mod, add, del|
+      trigger(mod + add + del)
+    end
 	end
 
 private
-	
-	def trigger_block(evt)
-		proc { |base, rel|
-			trigger base, rel, evt
-		}
-	end
 
-	def trigger(base, rel, evt)
-		begin
-			path = File.realpath(rel, base)
-		rescue
-			# if the file does not exist (in case of a deletion)
-			path = rel
-		end
-
-		return if exclude? path
+	def trigger(paths)
+		# return if paths.any? { |p| exclude? p }
 		return unless time_elapsed?
 
-		puts "Changed %s" % [rel]
+		puts "Changed %s" % [paths]
 		
-		if include? path
+		if paths.any? { |p| include? p }
 			run_script path if @options[:script]
 			run_command path if @options[:cmd]
 			@last_update = Time.now
 		end
 	end
 
-	def exclude? (path)
-		return false unless @options[:exclude]
-		File.fnmatch(@options[:exclude], path)
-	end
+	# def exclude? (path)
+	# 	return false unless @options[:exclude]
+	# 	File.fnmatch(@options[:exclude], path)
+	# end
 
 	def include? (path)
 		return true unless @options[:pattern]
