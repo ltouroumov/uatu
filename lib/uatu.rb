@@ -32,8 +32,8 @@ private
 		puts "Changed %s" % [paths]
 		
 		if paths.any? { |p| include? p }
-			run_script path if @options[:script]
-			run_command path if @options[:cmd]
+			run_script paths if @options[:script]
+			run_command paths if @options[:cmd]
 			@last_update = Time.now
 		end
 	end
@@ -54,17 +54,17 @@ private
 		@last_update + @options[:time] <= Time.now
 	end
 
-	def run_script(change_path)
+	def run_script(change_paths)
 		puts "Triggered '%s'" % [@options[:script]]
 		fork do
-			exec("%s %s" % [@options[:script], change_path])
+			exec("%s %s" % [@options[:script], change_paths.join(' ')])
 		end
 	end
 
-	def run_command(change_path)
+	def run_command(change_paths)
 		puts "Triggered '%s'" % [@options[:cmd]]
 		fork do
-			exec(@options[:cmd] % [change_path])
+			exec(@options[:cmd] % [change_paths.join(' ')])
 		end
 	end
 
