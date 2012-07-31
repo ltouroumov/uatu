@@ -1,7 +1,7 @@
 Gem::Specification.new do |spec|
   spec.name = 'uatu'
-  spec.version = '0.6.0'
-  spec.date = '2012-03-21'
+  spec.version = '0.6.1'
+  spec.date = '2012-07-31'
 
   spec.author = 'Jeremy David'
   spec.email = 'uatu@jeremydavid.ch'
